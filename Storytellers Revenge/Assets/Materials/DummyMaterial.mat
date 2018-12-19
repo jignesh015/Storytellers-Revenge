@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: VideoMaterial
+  m_Name: DummyMaterial
   m_Shader: {fileID: 4800000, guid: 70391b60f6ef323488d67d9650d51217, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -39,7 +39,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 8400000, guid: ffcc5bdba5c38474f9c620983214780d, type: 2}
+        m_Texture: {fileID: 8400000, guid: f14915348078d7f4e89ed0366d4e7724, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:

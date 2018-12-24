@@ -6,10 +6,21 @@ using UnityEngine.UI;
 
 public class MainLogic : MonoBehaviour {
 
+	//sphere gameobjects
 	public GameObject videoSphere;
 	public GameObject dummySphere;
 
+
+	//UI gameobjects
 	public GameObject startUI;
+	public GameObject titleUI;
+	public GameObject creditUI;
+	public Text startText;
+	public List<Button> startButtons;
+
+	//audio objects
+	public AudioSource audioPlayer;
+	public List<GameObject> AudioContainers;
 
 	public List<string> Urls;
 
@@ -25,18 +36,30 @@ public class MainLogic : MonoBehaviour {
 		
 	}
 
-	public void PlayVideo() {
-		Debug.Log ("clicked");
-		dummySphere.SetActive (false);
-		videoSphere.SetActive (true);
-		startUI.SetActive (false);
-		InitializeVideoPlayer ();
+	public void Enter() {
+		startText.text = "Choose your destination";
+		startButtons [0].gameObject.SetActive (false);
+		startButtons [1].gameObject.SetActive (true);
+		startButtons [2].gameObject.SetActive (true);
 	}
 
-	private void InitializeVideoPlayer() {
+	public void ChooseDestination(int index) {
+		startUI.SetActive (false);
+		dummySphere.SetActive (false);
+		videoSphere.SetActive (true);
+		InitializeVideoPlayer (index);
+	}
+
+	private void InitializeVideoPlayer(int index) {
 		videoPlayer.source = VideoSource.Url;
-		videoPlayer.url = Urls [0];
+		videoPlayer.url = Urls [index];
+		videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+		videoPlayer.EnableAudioTrack(0, true);
+		videoPlayer.SetTargetAudioSource(0, audioPlayer);
+		videoPlayer.controlledAudioTrackCount = 1;
+		audioPlayer.volume = 1.0f;
 		Debug.Log ("Success");
 		videoPlayer.Play ();
+		audioPlayer.Play ();
 	}
 }

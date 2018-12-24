@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: e32d5ff30f5380c44a42ba4bfdca6a6b
+timeCreated: 1545666294
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Thailandesa
+  fontNames:
+  - Thailandesa
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

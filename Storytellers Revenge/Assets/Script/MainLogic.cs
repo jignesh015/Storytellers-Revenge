@@ -8,7 +8,7 @@ public class MainLogic : MonoBehaviour {
 
 	//sphere gameobjects
 	public GameObject videoSphere;
-	public GameObject dummySphere;
+	public GameObject dummyRoom;
 
 
 	//UI gameobjects
@@ -16,7 +16,9 @@ public class MainLogic : MonoBehaviour {
 	public GameObject titleUI;
 	public GameObject creditUI;
 	public Text startText;
+	public Text titleText;
 	public List<Button> startButtons;
+	public List<string> placeName;
 
 	//audio objects
 	public AudioSource audioPlayer;
@@ -25,15 +27,32 @@ public class MainLogic : MonoBehaviour {
 	public List<string> Urls;
 
 	private VideoPlayer videoPlayer;
+	private Animator titleAnimation;
+	private bool isVideoPlayingFlag = false;
+	private bool videoStarted = false;
+	private int videoIndex;
 
 	// Use this for initialization
 	void Start () {
 		videoPlayer = videoSphere.transform.GetComponent<VideoPlayer> ();
+		titleAnimation = titleUI.GetComponent<Animator> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		//Check if title animation is over. 
+		if (titleAnimation.GetCurrentAnimatorStateInfo(0).IsName("Idle")) {
+			titleUI.SetActive (false);
+		}
+		//Check if video started playing
+		if (videoPlayer.isPlaying && !videoStarted) {
+			isVideoPlayingFlag = true;
+			videoStarted = true;
+		}
+		if (isVideoPlayingFlag) {
+			InitializeTitleUI (videoIndex);
+			isVideoPlayingFlag = false;
+		}
 	}
 
 	public void Enter() {
@@ -44,10 +63,13 @@ public class MainLogic : MonoBehaviour {
 	}
 
 	public void ChooseDestination(int index) {
+		videoIndex = index;
 		startUI.SetActive (false);
-		dummySphere.SetActive (false);
+		dummyRoom.SetActive (false);
 		videoSphere.SetActive (true);
+		//InitializeTitleUI (index);
 		InitializeVideoPlayer (index);
+		InitializeSpatialAudio (index);
 	}
 
 	private void InitializeVideoPlayer(int index) {
@@ -58,8 +80,17 @@ public class MainLogic : MonoBehaviour {
 		videoPlayer.SetTargetAudioSource(0, audioPlayer);
 		videoPlayer.controlledAudioTrackCount = 1;
 		audioPlayer.volume = 1.0f;
-		Debug.Log ("Success");
 		videoPlayer.Play ();
 		audioPlayer.Play ();
+	}
+
+	public void InitializeSpatialAudio(int index) {
+		
+	}
+
+	public void InitializeTitleUI(int index) {
+		titleUI.SetActive (true);
+		titleAnimation.Play ("Title_animation");
+		titleText.text = placeName [index];
 	}
 }

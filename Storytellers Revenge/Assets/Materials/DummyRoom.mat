@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: DummyMaterial
+  m_Name: DummyRoom
   m_Shader: {fileID: 4800000, guid: 70391b60f6ef323488d67d9650d51217, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

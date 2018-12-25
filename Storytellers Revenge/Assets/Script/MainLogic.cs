@@ -22,7 +22,7 @@ public class MainLogic : MonoBehaviour {
 
 	//audio objects
 	public AudioSource audioPlayer;
-	public List<GameObject> AudioContainers;
+	public List<AudioSource> AudioContainers;
 
 	public List<string> Urls;
 
@@ -84,7 +84,13 @@ public class MainLogic : MonoBehaviour {
 	}
 
 	public void InitializeSpatialAudio(int index) {
-		
+		if (index == 0) {
+			AudioContainers [0].Play ();
+			AudioContainers [1].Play ();
+		} else {
+			AudioContainers [2].Play ();
+		}
+
 	}
 
 	public void InitializeTitleUI(int index) {

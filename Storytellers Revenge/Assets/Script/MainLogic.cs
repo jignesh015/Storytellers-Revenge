@@ -67,7 +67,6 @@ public class MainLogic : MonoBehaviour {
 		startUI.SetActive (false);
 		dummyRoom.SetActive (false);
 		videoSphere.SetActive (true);
-		//InitializeTitleUI (index);
 		InitializeVideoPlayer (index);
 		InitializeSpatialAudio (index);
 	}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MainLogic : MonoBehaviour {
 
@@ -19,6 +20,11 @@ public class MainLogic : MonoBehaviour {
 	public Text titleText;
 	public List<Button> startButtons;
 	public List<string> placeName;
+	public List<GameObject> videoControlPanel;
+
+	//UI button material
+	public Material playMaterial;
+	public Material pauseMaterial; 
 
 	//audio objects
 	public AudioSource audioPlayer;
@@ -36,6 +42,7 @@ public class MainLogic : MonoBehaviour {
 	void Start () {
 		videoPlayer = videoSphere.transform.GetComponent<VideoPlayer> ();
 		titleAnimation = titleUI.GetComponent<Animator> ();
+		videoPlayer.loopPointReached += CheckOver;
 	}
 	
 	// Update is called once per frame
@@ -55,6 +62,15 @@ public class MainLogic : MonoBehaviour {
 		}
 	}
 
+	//Executes when video finishes playing
+	public void CheckOver(UnityEngine.Video.VideoPlayer vp) {
+		foreach (AudioSource aud in AudioContainers) {
+			aud.Stop ();
+		}
+		videoControlPanel [0].SetActive (false);
+		videoControlPanel [1].SetActive (true);
+	}
+
 	public void Enter() {
 		startText.text = "Choose your destination";
 		startButtons [0].gameObject.SetActive (false);
@@ -69,6 +85,9 @@ public class MainLogic : MonoBehaviour {
 		videoSphere.SetActive (true);
 		InitializeVideoPlayer (index);
 		InitializeSpatialAudio (index);
+
+		titleUI.SetActive (true);
+		titleText.text = placeName [index];
 	}
 
 	private void InitializeVideoPlayer(int index) {
@@ -94,8 +113,46 @@ public class MainLogic : MonoBehaviour {
 	}
 
 	public void InitializeTitleUI(int index) {
-		titleUI.SetActive (true);
+//		titleUI.SetActive (true);
+//		titleText.text = placeName [index];
 		titleAnimation.Play ("Title_animation");
-		titleText.text = placeName [index];
+
+		//Also initialize video control panel
+		videoControlPanel[0].SetActive(true);
+	}
+
+	public void TogglePause(Button btn) {
+		if (videoPlayer.isPlaying) {
+			videoPlayer.Pause ();
+			if (videoIndex == 0) {
+				AudioContainers [0].Pause ();
+				AudioContainers [1].Pause ();
+			} else {
+				AudioContainers [2].Pause ();
+			}
+			Image render = btn.GetComponent<Image> ();
+			render.material = playMaterial;
+		} else {
+			videoPlayer.Play ();
+			if (videoIndex == 0) {
+				AudioContainers [0].Play ();
+				AudioContainers [1].Play ();
+			} else {
+				AudioContainers [2].Play ();
+			}
+			Image render = btn.GetComponent<Image> ();
+			render.material = pauseMaterial;
+		}
+	}
+
+	public void Replay() {
+		ChooseDestination (videoIndex);
+		videoControlPanel[0].SetActive(true);
+		videoControlPanel[1].SetActive(false);
+	}
+
+	public void Home() {
+		Scene scene = SceneManager.GetActiveScene();
+		SceneManager.LoadScene (scene.name);
 	}
 }

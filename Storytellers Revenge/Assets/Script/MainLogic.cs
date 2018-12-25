@@ -30,10 +30,13 @@ public class MainLogic : MonoBehaviour {
 	public AudioSource audioPlayer;
 	public List<AudioSource> AudioContainers;
 
+	//video objects
 	public List<string> Urls;
 
+	//private variables
 	private VideoPlayer videoPlayer;
 	private Animator titleAnimation;
+	private Animator creditAnimation;
 	private bool isVideoPlayingFlag = false;
 	private bool videoStarted = false;
 	private int videoIndex;
@@ -42,6 +45,7 @@ public class MainLogic : MonoBehaviour {
 	void Start () {
 		videoPlayer = videoSphere.transform.GetComponent<VideoPlayer> ();
 		titleAnimation = titleUI.GetComponent<Animator> ();
+		creditAnimation = creditUI.GetComponent<Animator> ();
 		videoPlayer.loopPointReached += CheckOver;
 	}
 	
@@ -50,6 +54,13 @@ public class MainLogic : MonoBehaviour {
 		//Check if title animation is over. 
 		if (titleAnimation.GetCurrentAnimatorStateInfo(0).IsName("Idle")) {
 			titleUI.SetActive (false);
+		}
+		//Check if credit animation is over. 
+		if (creditAnimation.GetCurrentAnimatorStateInfo(0).IsName("Credit_Idle")) {
+			foreach (AudioSource aud in AudioContainers) {
+				aud.Stop ();
+			}
+			creditUI.SetActive (false);
 		}
 		//Check if video started playing
 		if (videoPlayer.isPlaying && !videoStarted) {
@@ -64,11 +75,9 @@ public class MainLogic : MonoBehaviour {
 
 	//Executes when video finishes playing
 	public void CheckOver(UnityEngine.Video.VideoPlayer vp) {
-		foreach (AudioSource aud in AudioContainers) {
-			aud.Stop ();
-		}
 		videoControlPanel [0].SetActive (false);
 		videoControlPanel [1].SetActive (true);
+		creditUI.SetActive (true);
 	}
 
 	public void Enter() {
@@ -78,6 +87,7 @@ public class MainLogic : MonoBehaviour {
 		startButtons [2].gameObject.SetActive (true);
 	}
 
+	//Executes when player chooses a destination
 	public void ChooseDestination(int index) {
 		videoIndex = index;
 		startUI.SetActive (false);
@@ -113,14 +123,13 @@ public class MainLogic : MonoBehaviour {
 	}
 
 	public void InitializeTitleUI(int index) {
-//		titleUI.SetActive (true);
-//		titleText.text = placeName [index];
 		titleAnimation.Play ("Title_animation");
 
 		//Also initialize video control panel
 		videoControlPanel[0].SetActive(true);
 	}
 
+	//Executes when user hits Play/Pause button
 	public void TogglePause(Button btn) {
 		if (videoPlayer.isPlaying) {
 			videoPlayer.Pause ();

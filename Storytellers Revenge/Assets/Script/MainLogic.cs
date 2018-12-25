@@ -11,7 +11,6 @@ public class MainLogic : MonoBehaviour {
 	public GameObject videoSphere;
 	public GameObject dummyRoom;
 
-
 	//UI gameobjects
 	public GameObject startUI;
 	public GameObject titleUI;
@@ -26,12 +25,19 @@ public class MainLogic : MonoBehaviour {
 	public Material playMaterial;
 	public Material pauseMaterial; 
 
+	//Video player material
+	public Material videoMaterial;
+	public Material blackMaterial; 
+
 	//audio objects
 	public AudioSource audioPlayer;
 	public List<AudioSource> AudioContainers;
 
 	//video objects
 	public List<string> Urls;
+
+	//particle object
+	public ParticleSystem leafParticle;
 
 	//private variables
 	private VideoPlayer videoPlayer;
@@ -40,10 +46,14 @@ public class MainLogic : MonoBehaviour {
 	private bool isVideoPlayingFlag = false;
 	private bool videoStarted = false;
 	private int videoIndex;
+	private Renderer videoRenderer;
 
 	// Use this for initialization
 	void Start () {
 		videoPlayer = videoSphere.transform.GetComponent<VideoPlayer> ();
+		videoRenderer = videoPlayer.GetComponent<Renderer> ();
+		videoRenderer.material = blackMaterial;
+
 		titleAnimation = titleUI.GetComponent<Animator> ();
 		creditAnimation = creditUI.GetComponent<Animator> ();
 		videoPlayer.loopPointReached += CheckOver;
@@ -78,6 +88,7 @@ public class MainLogic : MonoBehaviour {
 		videoControlPanel [0].SetActive (false);
 		videoControlPanel [1].SetActive (true);
 		creditUI.SetActive (true);
+		videoRenderer.material = blackMaterial;
 	}
 
 	public void Enter() {
@@ -93,6 +104,7 @@ public class MainLogic : MonoBehaviour {
 		startUI.SetActive (false);
 		dummyRoom.SetActive (false);
 		videoSphere.SetActive (true);
+		leafParticle.gameObject.SetActive (true);
 		InitializeVideoPlayer (index);
 		InitializeSpatialAudio (index);
 
@@ -101,6 +113,7 @@ public class MainLogic : MonoBehaviour {
 	}
 
 	private void InitializeVideoPlayer(int index) {
+		videoRenderer.material = videoMaterial;
 		videoPlayer.source = VideoSource.Url;
 		videoPlayer.url = Urls [index];
 		videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
@@ -108,6 +121,13 @@ public class MainLogic : MonoBehaviour {
 		videoPlayer.SetTargetAudioSource(0, audioPlayer);
 		videoPlayer.controlledAudioTrackCount = 1;
 		audioPlayer.volume = 1.0f;
+
+		StartCoroutine(PlayVideo());
+	}
+
+	IEnumerator PlayVideo() {
+		yield return new WaitForSeconds(4);
+		leafParticle.gameObject.SetActive (false);
 		videoPlayer.Play ();
 		audioPlayer.Play ();
 	}
@@ -155,6 +175,7 @@ public class MainLogic : MonoBehaviour {
 	}
 
 	public void Replay() {
+		videoRenderer.material = blackMaterial;
 		ChooseDestination (videoIndex);
 		videoControlPanel[0].SetActive(true);
 		videoControlPanel[1].SetActive(false);

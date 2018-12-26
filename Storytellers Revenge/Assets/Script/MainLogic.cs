@@ -9,6 +9,7 @@ public class MainLogic : MonoBehaviour {
 
 	//sphere gameobjects
 	public GameObject videoSphere;
+	public GameObject dummySphere;
 	public GameObject dummyRoom;
 
 	//UI gameobjects
@@ -81,6 +82,10 @@ public class MainLogic : MonoBehaviour {
 			InitializeTitleUI (videoIndex);
 			isVideoPlayingFlag = false;
 		}
+		if (videoPlayer.isPlaying) {
+			videoRenderer.material = videoMaterial;
+			videoControlPanel[0].SetActive(true);
+		}
 	}
 
 	//Executes when video finishes playing
@@ -113,7 +118,6 @@ public class MainLogic : MonoBehaviour {
 	}
 
 	private void InitializeVideoPlayer(int index) {
-		videoRenderer.material = videoMaterial;
 		videoPlayer.source = VideoSource.Url;
 		videoPlayer.url = Urls [index];
 		videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
@@ -139,18 +143,14 @@ public class MainLogic : MonoBehaviour {
 		} else {
 			AudioContainers [2].Play ();
 		}
-
 	}
 
 	public void InitializeTitleUI(int index) {
 		titleAnimation.Play ("Title_animation");
-
-		//Also initialize video control panel
-		videoControlPanel[0].SetActive(true);
 	}
 
 	//Executes when user hits Play/Pause button
-	public void TogglePause(Button btn) {
+	public void TogglePause(GameObject btn) {
 		if (videoPlayer.isPlaying) {
 			videoPlayer.Pause ();
 			if (videoIndex == 0) {
@@ -159,7 +159,7 @@ public class MainLogic : MonoBehaviour {
 			} else {
 				AudioContainers [2].Pause ();
 			}
-			Image render = btn.GetComponent<Image> ();
+			Renderer render = btn.GetComponent<Renderer> ();
 			render.material = playMaterial;
 		} else {
 			videoPlayer.Play ();
@@ -169,16 +169,16 @@ public class MainLogic : MonoBehaviour {
 			} else {
 				AudioContainers [2].Play ();
 			}
-			Image render = btn.GetComponent<Image> ();
+			Renderer render = btn.GetComponent<Renderer> ();
 			render.material = pauseMaterial;
 		}
 	}
 
 	public void Replay() {
 		videoRenderer.material = blackMaterial;
-		ChooseDestination (videoIndex);
-		videoControlPanel[0].SetActive(true);
+		videoControlPanel[0].SetActive(false);
 		videoControlPanel[1].SetActive(false);
+		ChooseDestination (videoIndex);
 	}
 
 	public void Home() {
